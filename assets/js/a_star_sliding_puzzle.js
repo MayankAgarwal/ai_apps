@@ -34,13 +34,13 @@ function State(goal_state, initial_state, parent)
 
 		var adj_idxs = getAdjacentIdxs(row, col, dim);
 
-		for (var adj_idx in adj_idxs)
+		for (var i in adj_idxs)
 		{
 			var temp_state = this.current_state.slice();
 			var temp_val = temp_state[empty_block_idx];
 			
-			temp_state[empty_block_idx] = temp_state[adj_idx];
-			temp_state[adj_idx] = temp_val;
+			temp_state[empty_block_idx] = temp_state[adj_idxs[i]];
+			temp_state[adj_idxs[i]] = temp_val;
 
 			var state = new State(this.GOAL_STATE, temp_state, this);
 			next_states.push(state);
@@ -52,12 +52,12 @@ function State(goal_state, initial_state, parent)
 	var getAdjacentIdxs = function(row, col, dim) {
 		res = []
 
-		var adj = [ [-1, -1], [-1, 1], [1, -1], [1, 1] ]
+		var adj = [ [-1, 0], [0, -1], [1, 0], [0, 1] ]
 
-		for (var a in adj)
+		for (var i in adj)
 		{
-			var row1 = row + a[0];
-			var col1 = col + a[1];
+			var row1 = row + adj[i][0];
+			var col1 = col + adj[i][1];
 
 			if (row1 >= 0 && row1 < dim && col1 >= 0 && col1 < dim )
 			{
@@ -94,7 +94,7 @@ function Puzzle(count)
 	};
 
 	var shuffle = function(arr) {
-		// Using Fisher-Yates algo, generate a random shuffling of the array
+		// Using Fisher-Yates algo, generate a randomly shuffled order of the array
 		
 		for (var i=arr.length-1; i>=0; i--)
 		{
@@ -109,8 +109,8 @@ function Puzzle(count)
 
 	this.initPuzzle = function(){
 		goal_sequence = generateSequence(0, this.piece_count+1);
-		start_sequence = shuffle(seq);
-		
+		start_sequence = shuffle(goal_sequence.slice());
+		this.init_state = new State(goal_sequence, start_sequence);
 	};
 
 }
