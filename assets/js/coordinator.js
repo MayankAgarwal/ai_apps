@@ -25,7 +25,7 @@ $('#solve').on('click', function(){
 	
 	$('#log').html('Solving the puzzle<br>');
 
-	res = A_star(puzzle.init_state, 20000);
+	res = A_star(puzzle.init_state, 10000);
 
 	final_state = res[0];
 	nodes_expanded = res[1];
