@@ -109,7 +109,8 @@ function State(goal_state, initial_state, parent_state)
 }
 
 function A_star(initial_state, max_nodes)
-{	
+{
+	$('#log').prepend('Solving the puzzle using A*<br>');	
 	var goal = undefined;
 	fringe = new Heap('f_val');
 	visited = []
@@ -124,13 +125,18 @@ function A_star(initial_state, max_nodes)
 		visited.push(curr_node.key)
 
 		if (nodes_expanded%100 == 0)
-			console.log(nodes_expanded);
+			$('#log').prepend('Nodes expanded: ' + nodes_expanded.toString() + '<br>');
 
 		if (nodes_expanded > max_nodes)
+		{
+			$('#log').prepend('Could not find a solution. Max nodes to expand (' + max_nodes.toString() + ') limit exceeded.<br>');
 			break;
+		}
 
 		if (curr_node.isGoal())
 		{
+			$('#log').prepend('SOLVED! Goal state found.<br>');
+			$('#log').prepend('Total nodes expanded to solve: ' + nodes_expanded.toString() + '<br>');
 			goal = curr_node;
 			break;
 		}
@@ -160,7 +166,8 @@ function Puzzle(count)
 	}
 
 	if (!this.validate())
-		throw "Invalid configuration";
+		$('#log').prepend('Invalid configuration<br>');
+		// throw "Invalid configuration";
 
 
 	var generateSequence = function(low, high) {
@@ -184,57 +191,13 @@ function Puzzle(count)
 		return arr;
 	};
 
-	this.initPuzzle = function(){
+	this.initPuzzle = function(start_sequence){
 		goal_sequence = generateSequence(1, this.piece_count+1);
 		goal_sequence.push(0);
 
-		start_sequence = shuffle(goal_sequence.slice());
+		if (typeof start_sequence === 'undefined')
+			start_sequence = shuffle(goal_sequence.slice());
+
 		this.init_state = new State(goal_sequence, start_sequence);
 	};
-
 }
-
-function getMovesSequence(final_state)
-{
-	res = []
-
-	while (typeof final_state !== 'undefined')
-	{
-		res.unshift(final_state);
-		final_state = final_state.parent_state;
-	}
-
-	return res;
-}
-
-function test(i, seq)
-{
-	if (i >= seq.length)
-		return
-
-	r.renderSlideValues(seq[i]);
-	setTimeout(
-		test, 1000, i+1, seq
-	);
-}
-
-
-$(document).ready(function(){
-	p = new Puzzle(8);
-	p.initPuzzle();
-
-	r = new renderPuzzle(3);
-	r.renderPuzzleFrame();
-	r.renderSlideValues(p.init_state);
-
-	res = A_star(p.init_state, 10000);
-	goal = res[0];
-	nodes_expanded = res[1];
-
-	console.log(nodes_expanded);
-
-	seq = getMovesSequence(goal);
-	console.log(seq, seq.length);
-
-	test(0, seq);
-})

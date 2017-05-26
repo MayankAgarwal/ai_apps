@@ -55,7 +55,7 @@
       <div class="col-md-6" id="puzzle">
       </div>
 
-      <div class="col-md-6 small" style="border: 1px solid #dedede; max-height: 500px; overflow: scroll;">
+      <div class="col-md-6 small" style="border: 1px solid #dedede; max-height: 500px; overflow: scroll;" id="log">
       
       </div>
 
@@ -70,9 +70,9 @@
 
       <div class="col-md-6">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Load configuration">
+            <input type="text" id="conf" class="form-control" placeholder="Load configuration">
             <span class="input-group-btn">
-              <button class="btn btn-default" type="button">Load configuration</button>
+              <button class="btn btn-default" type="button" id="load_conf">Load configuration</button>
             </span>
         </div>
         <div>
@@ -81,21 +81,23 @@
       </div>
 
       <div class="col-md-2">
-        <button class="btn btn-default" type="button">Generate random configuration</button>
+        <button class="btn btn-default" type="button" id="rand_conf">Generate random configuration</button>
       </div>
 
     </div>
 
     <div class="col-md-4 col-md-offset-4" style="margin-top: 20px; margin-bottom: 100px;">
-      <button class="btn btn-success btn-block" type="button">Solve</button>
+      <button class="btn btn-success btn-block" type="button" id="solve">Solve</button>
     </div>
 
 
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
     <script src="../../assets/js/binary_heap.js"></script>
     <script src="../../assets/js/a_star_sliding_puzzle.js"></script>
     <script src="../../assets/js/render.js"></script>
+    <script src="../../assets/js/coordinator.js"></script>
 
   </body>
 </html>
