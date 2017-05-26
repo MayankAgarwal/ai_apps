@@ -2,6 +2,7 @@ function State(goal_state, initial_state, parent_state)
 {
 	this.GOAL_STATE = goal_state;
 	this.current_state = initial_state;
+	this.key = this.current_state.toString();
 	this.parent_state = parent_state;
 	this.dim = parseInt(Math.sqrt(this.current_state.length + 1));
 
@@ -37,8 +38,8 @@ function State(goal_state, initial_state, parent_state)
 		for (var i in adj_idxs)
 		{
 			var temp_state = this.current_state.slice();
+
 			var temp_val = temp_state[empty_block_idx];
-			
 			temp_state[empty_block_idx] = temp_state[adj_idxs[i]];
 			temp_state[adj_idxs[i]] = temp_val;
 
@@ -61,7 +62,7 @@ function State(goal_state, initial_state, parent_state)
 
 			if (row1 >= 0 && row1 < dim && col1 >= 0 && col1 < dim )
 			{
-				var temp = row1 * 4 + col1;
+				var temp = row1 * dim + col1;
 				res.push(temp);
 			}
 		}
@@ -107,6 +108,45 @@ function State(goal_state, initial_state, parent_state)
 	this.f_val = this.g_val + this.h_val;
 }
 
+function A_star(initial_state, max_nodes)
+{	
+	var goal = undefined;
+	fringe = new Heap('f_val');
+	visited = []
+	var nodes_expanded = 0;
+
+	fringe.add(initial_state);
+
+	while (fringe.heap_size > 0)
+	{
+		curr_node = fringe.get_min();
+		nodes_expanded += 1;
+		visited.push(curr_node.key)
+
+		if (nodes_expanded%100 == 0)
+			console.log(nodes_expanded);
+
+		if (nodes_expanded > max_nodes)
+			break;
+
+		if (curr_node.isGoal())
+		{
+			goal = curr_node;
+			break;
+		}
+
+		next_nodes = curr_node.getNextStates();
+
+		for (var i in next_nodes)
+		{
+			if (visited.indexOf(next_nodes[i].key) < 0)
+				fringe.add(next_nodes[i]);
+		}
+	}
+
+	return [goal, nodes_expanded]
+}
+
 function Puzzle(count)
 {
 
@@ -145,7 +185,9 @@ function Puzzle(count)
 	};
 
 	this.initPuzzle = function(){
-		goal_sequence = generateSequence(0, this.piece_count+1);
+		goal_sequence = generateSequence(1, this.piece_count+1);
+		goal_sequence.push(0);
+		
 		start_sequence = shuffle(goal_sequence.slice());
 		this.init_state = new State(goal_sequence, start_sequence);
 	};
@@ -153,6 +195,19 @@ function Puzzle(count)
 }
 
 $(document).ready(function(){
-	p = new Puzzle(15);
+	p = new Puzzle(8);
 	p.initPuzzle();
+
+	res = A_star(p.init_state, 10000);
+	goal = res[0];
+	nodes_expanded = res[1];
+
+	console.log(nodes_expanded);
+
+	while (typeof goal.parent_state !== 'undefined')
+	{
+		console.log(goal.key)
+		goal = goal.parent_state;
+	}
+
 })
