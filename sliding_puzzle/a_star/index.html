@@ -10,10 +10,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <style type="text/css">
-      #puzzle {
-        margin-top: 5%;
-      }
-
       .square {
           float:left;
           position: relative;
@@ -48,18 +44,55 @@
 
   </head>
 
-  <body style="margin:40px">
+  <body style="margin:20px">
     
     <div style="text-align: center">
       <h3>Sliding puzzle using A* algorithm</h3>
     </div>
 
+    <div class="col-md-offset-1 col-md-10" style="margin-top: 30px;">
+
+      <div class="col-md-6" id="puzzle">
+      </div>
+
+      <div class="col-md-6 small" style="border: 1px solid #dedede; max-height: 500px; overflow: scroll;">
+      
+      </div>
+
+
+    </div>
+
     <div class="col-md-4 col-md-offset-4" id="puzzle">
 
     </div>
+
+    <div class="col-md-10 col-md-offset-2" style="margin-top: 30px">
+
+      <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Load configuration">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button">Load configuration</button>
+            </span>
+        </div>
+        <div>
+          <p class="text-danger">Enter comma separated values in left->right and top->down order. Use 0 to represent the empty block.</p>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <button class="btn btn-default" type="button">Generate random configuration</button>
+      </div>
+
+    </div>
+
+    <div class="col-md-4 col-md-offset-4" style="margin-top: 20px; margin-bottom: 100px;">
+      <button class="btn btn-success btn-block" type="button">Solve</button>
+    </div>
+
+
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-
     <script src="../../assets/js/binary_heap.js"></script>
     <script src="../../assets/js/a_star_sliding_puzzle.js"></script>
     <script src="../../assets/js/render.js"></script>
