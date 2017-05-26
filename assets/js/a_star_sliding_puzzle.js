@@ -187,16 +187,45 @@ function Puzzle(count)
 	this.initPuzzle = function(){
 		goal_sequence = generateSequence(1, this.piece_count+1);
 		goal_sequence.push(0);
-		
+
 		start_sequence = shuffle(goal_sequence.slice());
 		this.init_state = new State(goal_sequence, start_sequence);
 	};
 
 }
 
+function getMovesSequence(final_state)
+{
+	res = []
+
+	while (typeof final_state !== 'undefined')
+	{
+		res.unshift(final_state);
+		final_state = final_state.parent_state;
+	}
+
+	return res;
+}
+
+function test(i, seq)
+{
+	if (i >= seq.length)
+		return
+
+	r.renderSlideValues(seq[i]);
+	setTimeout(
+		test, 1000, i+1, seq
+	);
+}
+
+
 $(document).ready(function(){
 	p = new Puzzle(8);
 	p.initPuzzle();
+
+	r = new renderPuzzle(3);
+	r.renderPuzzleFrame();
+	r.renderSlideValues(p.init_state);
 
 	res = A_star(p.init_state, 10000);
 	goal = res[0];
@@ -204,10 +233,8 @@ $(document).ready(function(){
 
 	console.log(nodes_expanded);
 
-	while (typeof goal.parent_state !== 'undefined')
-	{
-		console.log(goal.key)
-		goal = goal.parent_state;
-	}
+	seq = getMovesSequence(goal);
+	console.log(seq, seq.length);
 
+	test(0, seq);
 })
